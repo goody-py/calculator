@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.x/dist/vue.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+</head>
+<body class="content">
+    <div id="calc" class="jumbotron">
+        <h1 class="display-4">Calculator application</h1>
+        <p class="lead">Here is some information about calculator</p>
+        <hr class="my-4">
+        <p>Here is some information about test data</p>
+        <p class="lead">
+            <form>
+                <div class="form-row">
+                <div class="col">
+                    <input v-model="number1" type="text" :class="{red: fieldHandler(number1)}" class="form-control" placeholder="number1">
+                </div>
+                <div class="col">
+                    <input v-model="number2" type="text" :class="{red: fieldHandler(number2)}" class="form-control" placeholder="number2">
+                </div>
+                <div class="col">
+                    <input v-model="result" type="text" class="form-control" readonly placeholder="Zip">
+                </div>
+                    <div class="col">
+                        <input v-on:click="validateInputAndGetResult" class="btn btn-primary" type="submit" value="Calculate!">
+                    </div>
+              </div>
+            </form>
+        </p>
+    </div>
+    <script>
+    new Vue({
+    el: "#calc",
+    data: {
+        number1: '',
+        number2: '',
+        result : 'Result'
+    },
+    methods : {
+        fieldHandler: function(number) {
+            if (isNaN(number)){
+                return true
+            }
+
+            return false
+        },
+        validateInputAndGetResult: function() {
+            if (isNaN(this.number1) || isNaN(this.number2)){
+                this.number1 = ''
+                this.number2 = ''
+                this.result = 'Input values can only be integers'
+                }
+            else {
+                url = "http://localhost:8000/calc"
+                axios.post(url, {number1: parseInt(this.number1), number2:parseInt(this.number2)}).then(
+                    response => this.result = response.data.result).catch(
+                        error =>
+                            //console.log(error.response.data)
+                            //console.log(error.response.status)
+                            //console.log(error.response.headers)
+                            console.log(error.request)
+                            //console.log(error.message)
+
+                    )
+
+            }
+        }
+    }
+    })
+    </script>
+</body>
+<style>
+.red {
+    border: 2px solid red;
+}
+</style>
+</html>
