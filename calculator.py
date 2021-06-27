@@ -1,5 +1,6 @@
 from fastapi import FastAPI
 from fastapi.responses import FileResponse
+from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, PositiveInt
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -18,6 +19,7 @@ class ResultResponseModel(BaseModel):
 
 
 calculator = FastAPI()
+calculator.mount('/static', StaticFiles(directory="static"), name='static')
 
 
 origins = ['*']
@@ -31,13 +33,14 @@ calculator.add_middleware(
     allow_headers=['*']
 )
 
+
 @calculator.get('/')
 def index_page():
-    return FileResponse('./index.html')
+    return FileResponse('index.html')
 
 
 @calculator.post('/calc')
-async def process_calculation(number_object: CalculationRequestModel):
+def process_calculation(number_object: CalculationRequestModel):
     number_sum = number_object.number1 + number_object.number2
     return ResultResponseModel(result=number_sum)
 

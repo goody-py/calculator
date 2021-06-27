@@ -1,6 +1,6 @@
 # Web calulator
 ### Simple web application on fastapi
-
+![](calculator.gif)
 ## Requirements
 Python 3.8+
 

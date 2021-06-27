@@ -1,109 +1,54 @@
 <!doctype html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+        integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-Piv4xVNRyMGpqkS2by6br4gNJ7DXjqk09RmUpJ8jgGtD7zP9yug3goQfGII0yAns"
+        crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/vue@2.x/dist/vue.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
 </head>
+
 <body class="content">
     <div id="calc" class="jumbotron">
         <h1 class="display-4">Calculator application</h1>
         <p class="lead">This application intended to calculate two numbers</p>
         <hr class="my-4">
-        <p>Please provide to positive integer numbers below, and press calculate button</p>
+        <p>Please provide to positive integer numbers below and press calculate button</p>
         <p class="lead">
-            <form>
-                <div class="form-row">
-                <div class="col">
-                    <input v-model="number1" type="text" :class="{red: fieldHandler(number1)}" class="form-control" placeholder="number1">
+        <form>
+            <div class="form-row">
+                <input v-model="number1" type="text" :class="{'bg-danger': !isInteger(number1)}" class="col form-control m-1"
+                    placeholder="number1">
+                <input v-model="number2" type="text" :class="{'bg-danger': !isInteger(number2)}" class="col form-control m-1"
+                    placeholder="number2">
+                <input v-model="result" type="text" class="col form-control m-1" readonly placeholder="Zip">
+                <input v-on:click="validateInputAndGetResult" class="col btn btn-primary m-1" type="button"
+                    value="Calculate!">
+            </div>
+            <div v-show="error !== null" class="card">
+                <div class="card-header">
+                    Errors:
                 </div>
-                <div class="col">
-                    <input v-model="number2" type="text" :class="{red: fieldHandler(number2)}" class="form-control" placeholder="number2">
+                <div class="card-body">
+                    <blockquote class="blockquote mb-0">
+                        <p>
+                            <error-object :errors="error" />
+                        </p>
+                    </blockquote>
                 </div>
-                <div class="col">
-                    <input v-model="result" type="text" class="form-control" readonly placeholder="Zip">
-                </div>
-                <div class="col">
-                    <input v-on:click="validateInputAndGetResult" class="btn btn-primary" type="submit" value="Calculate!">
-                </div>
-                </div>
-                    <div v-show="error !== null" class="card">
-                        <div class="card-header">
-                            Errors:
-                        </div>
-                        <div class="card-body">
-                        <blockquote class="blockquote mb-0">
-                            <p >
-                                <error-object :errors="error"/>
-                            </p>
-                        </blockquote>
-                    </div>
-                </div>
-            </form>
+            </div>
+        </form>
         </p>
     </div>
-    <script>
-    function isInteger(n) {
-        n = parseFloat(n)
-        return n % 1 === 0;
-    }
-    Vue.component('error-object', {
-    props: {
-        errors: {
-        type: Object
-        }
-    },
-        template:`<div>{{errors}}</div>`
-    })
-    new Vue({
-    el: "#calc",
-    component: [
-        'error-object'
-    ],
-    data: {
-        number1: '',
-        number2: '',
-        result : 'Result',
-        error: null
-    },
-    methods : {
-        fieldHandler: function(number) {
-            if (!isInteger(number)){
-                return true
-            }
-
-            return false
-        },
-        validateInputAndGetResult: function() {
-            if (!(isInteger(this.number1) && isInteger(this.number2))){
-                this.number1 = ''
-                this.number2 = ''
-                this.result = 'Input values can only be integers'
-                }
-            else {
-                this.error = null
-                axios.post("/calc", {number1: parseInt(this.number1), number2:parseInt(this.number2)})
-                .then(resp => resp.data)
-                .then(data => {this.result = data.result})
-                .catch(error => console.log(error))
-                //axios.post(url, {number1: parseInt(this.number1), number2:parseInt(this.number2)}).then(
-                    //response => this.result = response.data.result).catch(
-                      //  error => this.error=error.response.data
-                    //)
-            }
-        }
-    }
-    })
-    </script>
+    <script src="/static/app.js"></script>
 </body>
-<style>
-.red {
-    border: 2px solid red;
-}
-</style>
+
 </html>
