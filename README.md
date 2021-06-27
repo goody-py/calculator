@@ -34,4 +34,4 @@ $ uvicorn calculator:calculator --reload --host 0.0.0.0 --port 8000
 $ pytest .
 ```
 ## Finally
-* <b>Open index.html in your browser</b>
+[Open link](http://localhost:8000/)
