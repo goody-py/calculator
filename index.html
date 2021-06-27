@@ -87,11 +87,14 @@
                 }
             else {
                 this.error = null
-                url = "http://localhost:8000/calc"
-                axios.post(url, {number1: parseInt(this.number1), number2:parseInt(this.number2)}).then(
-                    response => this.result = response.data.result).catch(
-                        error => this.error=error.response.data
-                    )
+                axios.post("/calc", {number1: parseInt(this.number1), number2:parseInt(this.number2)})
+                .then(resp => resp.data)
+                .then(data => {this.result = data.result})
+                .catch(error => console.log(error))
+                //axios.post(url, {number1: parseInt(this.number1), number2:parseInt(this.number2)}).then(
+                    //response => this.result = response.data.result).catch(
+                      //  error => this.error=error.response.data
+                    //)
             }
         }
     }

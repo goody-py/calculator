@@ -1,4 +1,5 @@
 from fastapi import FastAPI
+from fastapi.responses import FileResponse
 from pydantic import BaseModel, PositiveInt
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -29,6 +30,10 @@ calculator.add_middleware(
     allow_methods=['*'],
     allow_headers=['*']
 )
+
+@calculator.get('/')
+def index_page():
+    return FileResponse('./index.html')
 
 
 @calculator.post('/calc')
